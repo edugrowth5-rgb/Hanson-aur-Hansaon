@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hanson aur Hansaon - Ultimate Hindi Jokes</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4a90e2">
+    <link rel="icon" type="image/png" href="1771152787399.png">
+    <link rel="apple-touch-icon" href="1771152787399.png">
+
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --secondary: #2ecc71;
+            --accent: #ff4757;
+            --bg: #f8f9fa;
+            --text: #2f3542;
+        }
+
+        body {
+            margin: 0; font-family: 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg); color: var(--text);
+            overflow-x: hidden;
+            /* Pull to refresh ke liye smooth scroll */
+            overscroll-behavior-y: contain;
+        }
+
+        /* --- PULL TO REFRESH STYLING --- */
+        #pull-to-refresh {
+            position: fixed;
+            top: -70px;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            transition: transform 0.2s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+            z-index: 9999;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .spinner {
+            width: 25px;
+            height: 25px;
+            border: 3px solid var(--primary);
+            border-top: 3px solid transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* --- EXISTING STYLES --- */
+        #disclaimerPage {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.05);
+            backdrop-filter: blur(10px); z-index: 5000;
+            display: flex; align-items: center; justify-content: center; padding: 20px;
+        }
+        .disclaimer-box {
+            background: white; padding: 30px; border-radius: 20px;
+            max-width: 500px; width: 100%; box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            text-align: center; border-top: 5px solid var(--primary);
+        }
+
+        #mainApp { display: none; }
+        
+        header {
+            background: white; padding: 15px; text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--primary), #63a4ff);
+            color: white; padding: 40px 20px; text-align: center;
+            border-bottom-left-radius: 50px; border-bottom-right-radius: 50px;
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+
+        .grid {
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 20px; margin-top: -30px;
+        }
+        .card {
+            background: white; padding: 20px; border-radius: 15px;
+            text-align: center; cursor: pointer; transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-bottom: 4px solid transparent;
+        }
+        .card:hover { transform: translateY(-5px); border-bottom-color: var(--primary); }
+        .card i { font-size: 40px; display: block; margin-bottom: 10px; }
+        .card span { font-weight: bold; font-size: 16px; }
+
+        #jokesPage {
+            display: none; position: fixed; inset: 0; background: white;
+            z-index: 1000; overflow-y: auto; padding-top: 60px;
+        }
+        .joke-card {
+            background: #fff; border-radius: 15px; padding: 20px;
+            margin-bottom: 20px; border: 1px solid #eee;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02); font-size: 18px; line-height: 1.6;
+        }
+        .btn-close {
+            position: fixed; top: 15px; right: 15px; background: var(--accent);
+            color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold;
+            z-index: 1001;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="pull-to-refresh">
+        <div class="spinner"></div>
+        <p style="margin: 5px 0 0; font-size: 12px; font-weight: bold; color: var(--primary);">Naye jokes load ho rahe hain...</p>
+    </div>
+
+    <div id="disclaimerPage">
+        <div class="disclaimer-box">
+            <div style="font-size: 50px;">⚖️</div>
+            <h2 style="color: #d32f2f;">ज़रूरी सूचना (Disclaimer)</h2>
+            <div style="text-align: left; font-size: 14px; margin: 20px 0; line-height: 1.6;">
+                1. <b>मनोरंजन:</b> यह ऐप केवल हंसी-मजाक के लिए है।<br>
+                2. <b>उम्र:</b> यह ऐप 13+ आयु वर्ग के लिए उपयुक्त है।<br>
+                3. <b>डेटा:</b> हम यूजर की कोई भी निजी जानकारी इकट्ठा नहीं करते हैं।<br>
+                4. <b>कॉपीराइट:</b> चुटकुले सार्वजनिक माध्यमों से लिए गए हैं।<br>
+                5. <b>जिम्मेदारी:</b> किसी भी विवाद की जिम्मेदारी डेवलपर की नहीं होगी।
+            </div>
+            <button onclick="acceptDisclaimer()" style="width:100%; padding:15px; background:var(--secondary); color:white; border:none; border-radius:10px; font-weight:bold; font-size: 18px; cursor:pointer;">मुझे मंजूर है / I Agree</button>
+        </div>
+    </div>
+
+    <div id="mainApp">
+        <header>
+            <h1 style="margin:0; font-size: 20px; color: var(--primary);">HANSON AUR HANSAON</h1>
+        </header>
+
+        <div class="hero">
+            <h2 style="margin:0;">मूड फ्रेश करने के लिए बेस्ट चुटकुले 🧞‍♂️</h2>
+            <p>हंसिए और दूसरों को भी हंसाइए!</p>
+        </div>
+
+        <div class="container">
+            <div class="grid">
+                <div class="card" onclick="openJokes('पप्पू स्पेशल', 'pappu')"><i>👦</i><span>पप्पू</span></div>
+                <div class="card" onclick="openJokes('पति-पत्नी', 'couple')"><i>💍</i><span>पति-पत्नी</span></div>
+                <div class="card" onclick="openJokes('स्कूल मस्ती', 'school')"><i>🏫</i><span>स्कूल</span></div>
+                <div class="card" onclick="openJokes('डॉक्टर-मरीज', 'doctor')"><i>🩺</i><span>डॉक्टर</span></div>
+                <div class="card" onclick="openJokes('देसी तड़का', 'desi')"><i>🇮🇳</i><span>देसी</span></div>
+                <div class="card" onclick="openJokes('शराबी भाई', 'drunk')"><i>🍺</i><span>शराबी</span></div>
+            </div>
+        </div>
+
+        <footer style="text-align: center; padding: 40px 0; opacity: 0.5;">
+            <p>&copy; 2026 Hanson aur Hansaon | Made with ❤️ for Smiles</p>
+        </footer>
+    </div>
+
+    <div id="jokesPage">
+        <button class="btn-close" onclick="closeJokes()">वापस जाएं</button>
+        <div class="container">
+            <h2 id="catTitle" style="text-align: center; color: var(--primary);"></h2>
+            <div id="jokesList"></div>
+        </div>
+    </div>
+
+    <script>
+        // 1. SERVICE WORKER REGISTRATION (With Update Logic)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(reg => {
+                    reg.onupdatefound = () => {
+                        const installingWorker = reg.installing;
+                        installingWorker.onstatechange = () => {
+                            if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                // Naya version mil gaya!
+                                if(confirm("Naya update mil gaya hai! Kya aap refresh karna chahenge?")) {
+                                    window.location.reload();
+                                }
+                            }
+                        };
+                    };
+                });
+            });
+        }
+
+        // 2. SMART MEMORY LOGIC
+        window.onload = function() {
+            if (localStorage.getItem('disclaimerAccepted') === 'true') {
+                document.getElementById('disclaimerPage').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'block';
+            }
+        };
+
+        function acceptDisclaimer() {
+            localStorage.setItem('disclaimerAccepted', 'true');
+            document.getElementById('disclaimerPage').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+        }
+
+        // 3. PULL TO REFRESH LOGIC
+        let touchStart = 0;
+        const pullDiv = document.getElementById('pull-to-refresh');
+
+        document.addEventListener('touchstart', e => {
+            touchStart = e.touches[0].pageY;
+        }, { passive: true });
+
+        document.addEventListener('touchmove', e => {
+            const touchMove = e.touches[0].pageY;
+            if (window.scrollY === 0 && touchMove > touchStart) {
+                const distance = Math.min(touchMove - touchStart, 150);
+                pullDiv.style.transform = `translateY(${distance}px)`;
+            }
+        }, { passive: true });
+
+        document.addEventListener('touchend', () => {
+            const transformValue = pullDiv.style.transform;
+            const distance = transformValue ? parseInt(transformValue.split('(')[1]) : 0;
+            
+            if (distance > 100) {
+                pullDiv.style.transform = `translateY(70px)`;
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            } else {
+                pullDiv.style.transform = `translateY(0)`;
+            }
+            touchStart = 0;
+        });
+
+        // 4. JOKES DATA & NAVIGATION
+        const jokesData = {
+            pappu: [
+                "पप्पू: मम्मी, क्या मैं भगवान जैसा दिखता हूँ?\nमम्मी: नहीं बेटा, पर क्यों?\nपप्पू: क्योंकि मम्मी, मैं जहाँ भी जाता हूँ, सब यही कहते हैं- 'हे भगवान! तू फिर आ गया!'",
+                "टीचर: पप्पू, न्यूटन का नियम बताओ।\nपप्पू: सर, जब तक मम्मी हाथ में डंडा नहीं लेती, बच्चा अपनी जगह से नहीं हिलता!",
+                "पप्पू: पापा, मुझे एक कुत्ता खरीदना है।\nपापा: बेटा, तुझे पता है ना कि कुत्ता पालना बहुत जिम्मेदारी का काम है?\nपप्पू: हाँ पापा, आप फिक्र मत करो, मैं उसे स्कूल नहीं भेजूँगा!",
+                "टीचर: पप्पू, 10 में से 8 गए कितने बचे?\nपप्पू: सर, सिर्फ छिलका बचेगा!",
+                "पप्पू: सर, लोग कहते हैं कि पृथ्वी गोल है, क्या ये सच है?\nटीचर: हाँ बिल्कुल।\nपप्पू: तो फिर हम नीचे क्यों नहीं गिरते?\nटीचर: क्योंकि बेटा, ऊपर से भगवान ने हम सबको फेविकोल से चिपकाया हुआ है!"
+            ],
+            couple: [
+                "पत्नी: शादी से पहले आप मुझे बड़े बड़े गिफ्ट देते थे, अब क्या हुआ?\nपति: बावली, कभी किसी ने मछली पकड़ने के बाद उसे चारा खिलाया है?",
+                "पति: आज खाने में क्या बना है?\nपत्नी: जहर!\nपति: ठीक hai तुम खा लो, मैं आज बाहर खा लूँगा!",
+                "पत्नी: अजी सुनते हो, अपनी शादी की एल्बम देख लो।\nपति: क्यों? क्या फिर से किसी मुसीबत को दावत देनी है?",
+                "पत्नी: (गुस्से में) मैं घर छोड़ कर जा रही हूँ।\nपति: (शांति से) ठीक है, मैं मोबाइल चार्जिंग पर लगा देता हूँ, वरना तुम रास्ते से वापस फोन करोगी कि चार्जर कहाँ रखा है!",
+                "पति: शादी से पहले तुम कितनी सुंदर लगती थी!\nपत्नी: और अब?\nपति: अब तुम और भी ज्यादा सुंदर लगती हो, बस मेरी देखने की शक्ति कम हो गई है!"
+            ],
+            school: [
+                "टीचर: 1 साल में कितनी गर्मी होती है?\nचिंटू: सर, 1 जून से 30 जून तक!",
+                "स्टूडेंट: सर, क्या बिना कुछ किए सजा मिल सकती है?\nटीचर: नहीं बेटा।\nस्टूडेंट: शुक्र है सर, मैंने होमवर्क नहीं किया है!",
+                "टीचर: न्यूटन का चौथा नियम क्या है?\nसंजू: सर, परीक्षा के वक्त जब सिर खुजलाने से भी उत्तर न आए, तो उसे 'न्यूटन का सन्नाटा' कहते हैं!",
+                "टीचर: 'हिप्पोपोटामस' की स्पेलिंग बताओ?\nपप्पू: सर, वो इतना बड़ा जानवर है कि उसकी स्पेलिंग बोलते-बोलते छुट्टी हो जाएगी!"
+            ],
+            doctor: [
+                "मरीज: डॉक्टर साहब, मुझे सब कुछ दो-दो दिखाई देता है।\nडॉक्टर: घबराओ मत, सामने वाली बेंच पर बैठ जाओ।\nमरीज: डॉक्टर साहब, कौन सी वाली पर?",
+                "डॉक्टर: आपका वजन कैसे बढ़ गया?\nमरीज: डॉक्टर साहब, आपने ही तो कहा था बाहर का खाना बंद करो, इसलिए मैं घर लाकर खाता हूँ!",
+                "मरीज: डॉक्टर साहब, नींद नहीं आती।\nडॉक्टर: ये लो दवा, एक सोने से पहले और एक उठने के तुरंत बाद ले लेना!"
+            ],
+            desi: [
+                "बाप: बेटा, रिजल्ट कैसा रहा?\nबेटा: शर्मा जी का लड़का फेल है।\nबाप: और तू?\nबेटा: मैं कौन सा शर्मा जी का दामाद हूँ, मैं भी फेल हूँ!",
+                "पड़ोसी: भाई, आपका लड़का बहुत शोर करता है।\nपिता: शोर तो करेगा ही, आखिर खानदानी खून है, कोई 'म्यूट बटन' थोड़ी ना लगा है!",
+                "देसी बाप: बेटा, तू बड़ा होकर क्या बनेगा?\nबेटा: पापा, मैं बड़ा होकर पायलट बनूँगा और आपको पूरी दुनिया घुमाऊंगा।\nबाप: पहले पड़ोस वाली गली से धनिया तो ले आ, पायलट बाद में बनियो!"
+            ],
+            drunk: [
+                "पुलिस: इतनी रात को कहाँ जा रहे हो?\nशराबी: शराब पीने से होने वाले नुकसान पर लेक्चर सुनने।\nपुलिस: इतनी रात को कौन लेक्चर देगा?\nशराबी: मेरी पत्नी!",
+                "शराबी: भाई, ये कहाँ आ गए हम?\nदोस्त: भाई, ये कब्रिस्तान है।\nशराबी: ओ तेरी! यहाँ इतने लोग सो रहे हैं और एक भी मच्छर नहीं?",
+                "शराबी: भाई, ये चाँद इतना चमक क्यों रहा है?\nदोस्त: क्योंकि उसे 'फुल चार्ज' कर दिया गया है!"
+            ]
+        };
+
+        function openJokes(title, catKey) {
+            document.getElementById('jokesPage').style.display = 'block';
+            document.getElementById('catTitle').innerText = title;
+            const listDiv = document.getElementById('jokesList');
+            listDiv.innerHTML = "";
+            jokesData[catKey].forEach(joke => {
+                const card = document.createElement('div');
+                card.className = 'joke-card';
+                card.innerText = joke;
+                listDiv.appendChild(card);
+            });
+            window.scrollTo(0,0);
+        }
+
+        function closeJokes() {
+            document.getElementById('jokesPage').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
