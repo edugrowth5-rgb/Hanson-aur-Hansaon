@@ -1,0 +1,23 @@
+{
+  "name": "Hanson aur Hansaon",
+  "short_name": "HansonHansaon",
+  "description": "Ultimate Hindi Jokes for everyone",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#f8f9fa",
+  "theme_color": "#4a90e2",
+  "icons": [
+    {
+      "src": "1771152787399.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "1771152787399.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
