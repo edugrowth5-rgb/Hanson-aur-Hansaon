@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hanson-v2.1'; // Har badi update par v34 ko v35 kar dein
+const CACHE_NAME = 'hanson-v2.1'; // Har badi update par v2 ko v2.1 kar dein
 const ASSETS = [
   '/',
   '/index.html',
